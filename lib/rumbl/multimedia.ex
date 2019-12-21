@@ -102,10 +102,9 @@ defmodule Rumbl.Multimedia do
       %Ecto.Changeset{source: %Video{}}
 
   """
-  def change_video(%Accounts.User{} = user, %Video{} = video) do
+  def change_video(%Video{} = video) do
     video
     |> Video.changeset(%{})
-    |> put_user(user)
   end
 
   defp put_user(changeset, user) do
@@ -132,5 +131,17 @@ defmodule Rumbl.Multimedia do
 
   defp preload_user(video_or_videos) do
     Repo.preload(video_or_videos, :user)
+  end
+
+  alias Rumbl.Multimedia.Category
+
+  def create_category(name) do
+    Repo.get_by(Category, name: name) || Repo.insert!(%Category{name: name})
+  end
+
+  def list_alphabetical_categories do
+    Category
+    |> Category.alphabetical()
+    |> Repo.all()
   end
 end
